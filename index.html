@@ -66,13 +66,21 @@
         if (response && response.data && response.data.timings) {
           const timings = response.data.timings;
           const now = new Date();
-          const todayStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
+          const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`; // YYYY-MM-DD
           const prayerTimes = [];
-
+          console.log(todayStr);
+            let visiblePrayers = [
+              "Fajr",
+              "Sunrise",
+              "Dhuhr",
+              "Asr",
+              "Maghrib",
+              "Isha"
+            ];
           // Parse and store all prayer times
           Object.entries(timings).forEach(([prayerName, timeStr]) => {
             const prayerTime = new Date(`${todayStr}T${timeStr}:00`);
-            prayerTimes.push({ prayerName, timeStr, prayerTime });
+            if (visiblePrayers.includes(prayerName)) prayerTimes.push({ prayerName, timeStr, prayerTime });
           });
 
           // Sort by time
