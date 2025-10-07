@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prayer Times for Auckland</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 50%;
+    }
+    th, td {
+      border: 1px solid #aaa;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #eee;
+    }
+  .passed {
+    background-color: #d4edda; /* light green */
+  }
+  .upcoming {
+    background-color: #f8d7da; /* light red */
+  }
+  .current {
+    background-color: #fff3cd; /* light yellow */
+  }
+
+  </style>
+</head>
+<body>
+  <h1>Prayer Times — Auckland</h1>
+  <table id="prayer-times-table">
+    <thead>
+      <tr>
+        <th>Prayer</th>
+        <th>Time</th>
+        <th>Time until</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- rows will go here -->
+    </tbody>
+  </table>
+
+  <script>
+  $(document).ready(function () {
+    function getTimeDifference(date1, date2) {
+      const diffMs = date2 - date1;
+      if (diffMs <= 0) return "Passed";
+
+      const totalSeconds = Math.floor(diffMs / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      const pad = (n) => n.toString().padStart(2, '0');
+      return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    }
+
+    const url = `https://api.aladhan.com/v1/timingsByCity?city=Auckland&country=New Zealand`;
+
+    $.getJSON(url)
+      .done(function (response) {
+        if (response && response.data && response.data.timings) {
+          const timings = response.data.timings;
+          const now = new Date();
+          const todayStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
+          const prayerTimes = [];
+
+          // Parse and store all prayer times
+          Object.entries(timings).forEach(([prayerName, timeStr]) => {
+            const prayerTime = new Date(`${todayStr}T${timeStr}:00`);
+            prayerTimes.push({ prayerName, timeStr, prayerTime });
+          });
+
+          // Sort by time
+          prayerTimes.sort((a, b) => a.prayerTime - b.prayerTime);
+
+          // Determine current prayer
+          let currentPrayerIndex = -1;
+          for (let i = 0; i < prayerTimes.length - 1; i++) {
+            if (now >= prayerTimes[i].prayerTime && now < prayerTimes[i + 1].prayerTime) {
+              currentPrayerIndex = i;
+              break;
+            }
+          }
+          if (now >= prayerTimes[prayerTimes.length - 1].prayerTime) {
+            currentPrayerIndex = prayerTimes.length - 1;
+          }
+
+          const $tbody = $("#prayer-times-table tbody");
+          $tbody.empty();
+
+          // Render table rows
+          prayerTimes.forEach((item, index) => {
+            let className = "";
+            const now = new Date();
+
+            if (index === currentPrayerIndex) {
+              className = "current";
+            } else if (item.prayerTime < now) {
+              className = "passed";
+            } else {
+              className = "upcoming";
+            }
+
+            const row = `
+              <tr class="${className}" data-prayer-time="${item.prayerTime.toISOString()}">
+                <td>${item.prayerName}</td>
+                <td>${item.timeStr}</td>
+                <td class="countdown"></td>
+              </tr>
+            `;
+
+            $tbody.append(row);
+          });
+
+          // ⏱ Start countdown updates
+          setInterval(() => {
+            $("#prayer-times-table tbody tr").each(function () {
+              const prayerTimeStr = $(this).attr("data-prayer-time");
+              const prayerTime = new Date(prayerTimeStr);
+              const now = new Date();
+
+              const countdownText = getTimeDifference(now, prayerTime);
+              $(this).find(".countdown").text(countdownText);
+            });
+          }, 1000);
+        } else {
+          console.error("Unexpected response format:", response);
+        }
+      })
+      .fail(function (jqxhr, textStatus, error) {
+        console.error("Request Failed: " + textStatus + ", " + error);
+        $("#prayer-times-table tbody").append(
+          `<tr><td colspan="3">Error fetching data</td></tr>`
+        );
+      });
+  });
+</script>
+<a href="prayer-guide.html">Prayer Guide</a>
+</body>
+</html>
