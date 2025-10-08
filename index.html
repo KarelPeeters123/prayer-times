@@ -5,85 +5,247 @@
   <title>Prayer Times for Auckland</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
+    :root {
+      --bg: #0f1724;
+      --card: #0b1220;
+      --accent: linear-gradient(135deg, #6ee7b7 0%, #3b82f6 100%);
+      --glass: rgba(255, 255, 255, 0.04);
+      --muted: #9aa4b2;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1000px 600px at 10% 10%, rgba(59, 130, 246, 0.08), transparent), var(--bg);
+      color: #e6eef8;
+      min-height: 100vh;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 14px;
+      padding: 30px;
+      backdrop-filter: blur(6px);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2.5em;
+      color: #e6eef8;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .current-prayer {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--muted);
+      font-size: 1.1em;
+      font-weight: 500;
+    }
+
+    .current-prayer .prayer-name {
+      color: #fbbf24;
+      font-weight: 600;
+    }
+
     table {
       border-collapse: collapse;
-      width: 50%;
+      width: 100%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 14px;
+      overflow: hidden;
+      backdrop-filter: blur(6px);
     }
+
     th, td {
-      border: 1px solid #aaa;
-      padding: 8px;
+      padding: 16px 20px;
       text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
+
     th {
-      background: #eee;
+      background: var(--glass);
+      font-weight: 700;
+      font-size: 1.1em;
+      color: #e6eef8;
     }
-  .passed {
-    background-color: #d4edda; /* light green */
-  }
-  .upcoming {
-    background-color: #f8d7da; /* light red */
-  }
-  .current {
-    background-color: #fff3cd; /* light yellow */
-  }
 
-  /* Prayer guide links styling */
-  .prayer-guides {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-  }
+    td {
+      color: #e6eef8;
+      font-size: 1em;
+    }
 
-  .prayer-guides h3 {
-    margin-top: 0;
-    color: #495057;
-  }
+    .passed {
+      background: linear-gradient(90deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.04));
+      border-left: 3px solid #22c55e;
+    }
 
-  .guide-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 15px;
-  }
+    .upcoming {
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.08), rgba(239, 68, 68, 0.04));
+      border-left: 3px solid #ef4444;
+    }
 
-  .guide-link {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #0066cc;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-  }
+    .current {
+      background: linear-gradient(90deg, rgba(251, 191, 36, 0.08), rgba(251, 191, 36, 0.04));
+      border-left: 3px solid #fbbf24;
+    }
 
-  .guide-link:hover {
-    background-color: #0052a3;
-    text-decoration: none;
-  }
+    /* Prayer guide links styling */
+    .prayer-guides {
+      margin-top: 30px;
+      padding: 25px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 14px;
+      backdrop-filter: blur(6px);
+    }
 
-  .prayer-name-link:hover {
-    text-decoration: underline !important;
-  }
+    .prayer-guides h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #e6eef8;
+      font-size: 1.5em;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
 
+    .prayer-guides p {
+      color: var(--muted);
+      margin-bottom: 20px;
+      font-size: 1.05em;
+    }
+
+    .guide-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .guide-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 20px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 1em;
+      font-weight: 600;
+      transition: all 0.18s ease;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .guide-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
+      text-decoration: none;
+      color: white;
+    }
+
+    .prayer-name-link {
+      color: #60a5fa !important;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.18s ease;
+    }
+
+    .prayer-name-link:hover {
+      color: #93c5fd !important;
+    }
+
+    .countdown {
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      th, td {
+        padding: 12px 16px;
+        font-size: 0.9em;
+      }
+
+      .guide-links {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Loading animation */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+      font-size: 1.1em;
+    }
+
+    .loading::after {
+      content: '';
+      animation: dots 1.5s steps(5, end) infinite;
+    }
+
+    @keyframes dots {
+      0%, 20% { content: ''; }
+      40% { content: '.'; }
+      60% { content: '..'; }
+      80%, 100% { content: '...'; }
+    }
+
+    /* Focus accessibility */
+    .guide-link:focus,
+    .prayer-name-link:focus {
+      outline: 3px solid rgba(59, 130, 246, 0.28);
+      outline-offset: 3px;
+    }
   </style>
 </head>
 <body>
-  <h1>Prayer Times — Auckland</h1>
-  <table id="prayer-times-table">
-    <thead>
-      <tr>
-        <th>Prayer</th>
-        <th>Time</th>
-        <th>Time until</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- rows will go here -->
-    </tbody>
-  </table>
+  <div class="container">
+    <h1>Prayer Times — Auckland</h1>
+    <div class="current-prayer" id="current-prayer-display">
+      Loading current prayer...
+    </div>
+    <table id="prayer-times-table">
+      <thead>
+        <tr>
+          <th>Prayer</th>
+          <th>Time</th>
+          <th>Time until</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="3" class="loading">Loading prayer times</td>
+        </tr>
+      </tbody>
+    </table>
 
   <script>
   $(document).ready(function () {
@@ -156,7 +318,7 @@
             }
 
             // Create prayer name with link (if guide exists)
-            let prayerNameCell = item.prayerName;
+            let prayerNameCell = item.prayerName === 'Sunrise' ? 'no prayer' : item.prayerName;
             const guidePrayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
             if (guidePrayers.includes(item.prayerName)) {
               const guideFileName = item.prayerName.toLowerCase();
@@ -174,8 +336,46 @@
             $tbody.append(row);
           });
 
+          // Update current prayer display
+          function updateCurrentPrayerDisplay() {
+            const now = new Date();
+            let currentPrayerIndex = -1;
+            let currentPrayerName = "";
+            let nextPrayerName = "";
+            
+            // Find current prayer
+            for (let i = 0; i < prayerTimes.length - 1; i++) {
+              if (now >= prayerTimes[i].prayerTime && now < prayerTimes[i + 1].prayerTime) {
+                currentPrayerIndex = i;
+                currentPrayerName = prayerTimes[i].prayerName === 'Sunrise' ? 'no prayer' : prayerTimes[i].prayerName;
+                nextPrayerName = prayerTimes[i + 1].prayerName === 'Sunrise' ? 'no prayer' : prayerTimes[i + 1].prayerName;
+                break;
+              }
+            }
+            
+            if (now >= prayerTimes[prayerTimes.length - 1].prayerTime) {
+              currentPrayerIndex = prayerTimes.length - 1;
+              currentPrayerName = prayerTimes[prayerTimes.length - 1].prayerName === 'Sunrise' ? 'no prayer' : prayerTimes[prayerTimes.length - 1].prayerName;
+              nextPrayerName = (prayerTimes[0].prayerName === 'Sunrise' ? 'no prayer' : prayerTimes[0].prayerName) + " (tomorrow)";
+            } else if (currentPrayerIndex === -1) {
+              // Before first prayer of the day
+              currentPrayerName = "Before " + (prayerTimes[0].prayerName === 'Sunrise' ? 'no prayer' : prayerTimes[0].prayerName);
+              nextPrayerName = prayerTimes[0].prayerName === 'Sunrise' ? 'no prayer' : prayerTimes[0].prayerName;
+            }
+
+            const displayText = currentPrayerIndex >= 0 ? 
+              `Current prayer period: <span class="prayer-name">${currentPrayerName}</span> • Next: ${nextPrayerName}` :
+              `Next prayer: <span class="prayer-name">${nextPrayerName}</span>`;
+              
+            $("#current-prayer-display").html(displayText);
+          }
+
+          // Initial update
+          updateCurrentPrayerDisplay();
+
           // ⏱ Start countdown updates
           setInterval(() => {
+            // Update countdowns
             $("#prayer-times-table tbody tr").each(function () {
               const prayerTimeStr = $(this).attr("data-prayer-time");
               const prayerTime = new Date(prayerTimeStr);
@@ -184,31 +384,25 @@
               const countdownText = getTimeDifference(now, prayerTime);
               $(this).find(".countdown").text(countdownText);
             });
+            
+            // Update current prayer display
+            updateCurrentPrayerDisplay();
           }, 1000);
         } else {
           console.error("Unexpected response format:", response);
+          $("#prayer-times-table tbody").html(
+            `<tr><td colspan="3" style="text-align: center; color: #dc3545;">Error: Unexpected response format</td></tr>`
+          );
         }
       })
       .fail(function (jqxhr, textStatus, error) {
         console.error("Request Failed: " + textStatus + ", " + error);
-        $("#prayer-times-table tbody").append(
-          `<tr><td colspan="3">Error fetching data</td></tr>`
+        $("#prayer-times-table tbody").html(
+          `<tr><td colspan="3" style="text-align: center; color: #dc3545;">Error fetching prayer times. Please try again later.</td></tr>`
         );
       });
   });
 </script>
-
-<div class="prayer-guides">
-  <h3>📖 Prayer Guides</h3>
-  <p>Learn how to perform each prayer with step-by-step instructions, Arabic text, and translations:</p>
-  <div class="guide-links">
-    <a href="prayer-guides/fajr.html" class="guide-link">🌅 Fajr Guide</a>
-    <a href="prayer-guides/dhuhr.html" class="guide-link">☀️ Dhuhr Guide</a>
-    <a href="prayer-guides/asr.html" class="guide-link">🌇 Asr Guide</a>
-    <a href="prayer-guides/maghrib.html" class="guide-link">🌅 Maghrib Guide</a>
-    <a href="prayer-guides/isha.html" class="guide-link">🌙 Isha Guide</a>
   </div>
-</div>
-
 </body>
 </html>
