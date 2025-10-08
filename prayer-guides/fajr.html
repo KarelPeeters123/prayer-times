@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fajr Prayer Guide - Interactive</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .prayer-step {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 15px 0;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #87ceeb;
+            min-height: 400px;
+        }
+        
+        .prayer-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .arabic {
+            font-size: 1.3em;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            direction: rtl;
+            line-height: 1.8;
+        }
+        
+        .transliteration {
+            font-style: normal;
+            color: #ffd700;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .translation {
+            font-style: italic;
+            color: #e6f3ff;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.05em;
+        }
+        
+        .step-content {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .step-title {
+            font-size: 1.8em;
+            color: #f0f8ff;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .step-description {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #e6f3ff;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-button {
+            background: linear-gradient(135deg, #6ee7b7 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .step-counter {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            color: white;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .time-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #ffd700;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌅 Fajr Prayer Guide</h1>
+        
+        <div class="time-info">
+            <p><strong>Fajr</strong> is the dawn prayer, performed before sunrise. It consists of <strong>2 Rak'ah</strong> and is one of the most blessed prayers of the day.</p>
+        </div>
+
+        <!-- Step 1: Introduction -->
+        <div class="prayer-step active" id="step-1">
+            <div class="step-content">
+                <div class="step-title">Welcome to Fajr Prayer</div>
+                <div class="step-description">
+                    <p>This interactive guide will take you through the Fajr prayer step by step.</p>
+                    <p><strong>Time:</strong> From true dawn (Fajr) until just before sunrise</p>
+                    <p><strong>Rak'ah:</strong> 2</p>
+                    <p>Click "Next" when you're ready to begin.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Preparation -->
+        <div class="prayer-step" id="step-2">
+            <div class="step-content">
+                <div class="step-title">1. Preparation (Wudu)</div>
+                <div class="step-description">
+                    <p>Ensure you have performed Wudu (ablution) and are facing the Qibla (direction of Kaaba in Mecca).</p>
+                    <p>Stand with your feet slightly apart, hands at your sides.</p>
+                    <p>Make sure you're clean and in a clean place.</p>
+                    <p>Click "Next" when you're ready to make the intention.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Intention -->
+        <div class="prayer-step" id="step-3">
+            <div class="step-content">
+                <div class="step-title">2. Intention (Niyyah)</div>
+                <div class="step-description">Make the intention in your heart to perform the Fajr prayer for Allah.</div>
+                <div class="arabic">نَوَيْتُ أَنْ أُصَلِّيَ فَرْضَ الْفَجْرِ لِلَّهِ تَعَالَى</div>
+                <div class="transliteration">Nawaytu an usalliya farda al-fajri lillahi ta'ala</div>
+                <div class="translation">"I intend to pray the Fajr obligation for Allah"</div>
+            </div>
+        </div>
+
+        <!-- Step 4: Takbir -->
+        <div class="prayer-step" id="step-4">
+            <div class="step-content">
+                <div class="step-title">3. Opening Takbir</div>
+                <div class="step-description">Raise your hands to ear level and say "Allahu Akbar"</div>
+                <div class="arabic">اللَّهُ أَكْبَر</div>
+                <div class="transliteration">Allahu Akbar</div>
+                <div class="translation">"Allah is Most Great"</div>
+                <div class="step-description">Then place your hands over your chest (right hand over left).</div>
+            </div>
+        </div>
+
+        <!-- Step 5: Opening Supplication -->
+        <div class="prayer-step" id="step-5">
+            <div class="step-content">
+                <div class="step-title">4. Opening Supplication</div>
+                <div class="step-description">Recite the opening supplication:</div>
+                <div class="arabic">سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ وَتَبَارَكَ اسْمُكَ وَتَعَالَى جَدُّكَ وَلَا إِلَهَ غَيْرُك</div>
+                <div class="transliteration">Subhanaka Allahumma wa bihamdika wa tabaraka ismuka wa ta'ala jadduka wa la ilaha ghayruk</div>
+                <div class="translation">"Glory be to You, O Allah, and praise be to You. Blessed is Your name, exalted is Your majesty, and there is no god but You."</div>
+            </div>
+        </div>
+
+        <!-- Step 6: Al-Fatiha -->
+        <div class="prayer-step" id="step-6">
+            <div class="step-content">
+                <div class="step-title">5. Recite Al-Fatiha</div>
+                <div class="step-description">Recite Surah Al-Fatiha (required in every rak'ah):</div>
+                <div class="arabic">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                <div class="transliteration">Bismillahi-r-Rahmani-r-Raheem</div>
+                <div class="translation">"In the name of Allah, the Most Gracious, the Most Merciful"</div>
+            </div>
+        </div>
+
+        <!-- Step 7: Al-Fatiha continues -->
+        <div class="prayer-step" id="step-7">
+            <div class="step-content">
+                <div class="step-title">5. Al-Fatiha (continued)</div>
+                <div class="arabic">الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</div>
+                <div class="transliteration">Alhamdu lillahi rabbil-alameen</div>
+                <div class="translation">"All praise is due to Allah, Lord of the worlds"</div>
+                
+                <div class="arabic">الرَّحْمَٰنِ الرَّحِيمِ</div>
+                <div class="transliteration">Ar-Rahmani-r-Raheem</div>
+                <div class="translation">"The Most Gracious, the Most Merciful"</div>
+            </div>
+        </div>
+
+        <!-- Step 8: Al-Fatiha final -->
+        <div class="prayer-step" id="step-8">
+            <div class="step-content">
+                <div class="step-title">5. Al-Fatiha (final verses)</div>
+                <div class="arabic">مَالِكِ يَوْمِ الدِّينِ</div>
+                <div class="transliteration">Maliki yawmi-d-deen</div>
+                <div class="translation">"Master of the Day of Judgment"</div>
+                
+                <div class="arabic">إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ</div>
+                <div class="transliteration">Iyyaka na'budu wa iyyaka nasta'een</div>
+                <div class="translation">"You alone we worship, and You alone we ask for help"</div>
+            </div>
+        </div>
+
+        <!-- Step 9: Al-Fatiha ending -->
+        <div class="prayer-step" id="step-9">
+            <div class="step-content">
+                <div class="step-title">5. Al-Fatiha (conclusion)</div>
+                <div class="arabic">اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</div>
+                <div class="transliteration">Ihdinas-siratal-mustaqeem</div>
+                <div class="translation">"Guide us to the straight path"</div>
+                
+                <div class="arabic">صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ</div>
+                <div class="transliteration">Siratal-ladhina an'amta alayhim ghayril-maghdubi alayhim wa la-d-dalleen</div>
+                <div class="translation">"The path of those whom You have blessed, not of those who have incurred Your wrath, nor of those who have gone astray"</div>
+            </div>
+        </div>
+
+        <!-- Step 10: Additional Surah -->
+        <div class="prayer-step" id="step-10">
+            <div class="step-content">
+                <div class="step-title">6. Additional Surah</div>
+                <div class="step-description">Now recite an additional surah. Here's Al-Kawthar:</div>
+                <div class="arabic">إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ</div>
+                <div class="transliteration">Inna a'taynakal-kawthar</div>
+                <div class="translation">"Indeed, We have granted you abundance"</div>
+                
+                <div class="arabic">فَصَلِّ لِرَبِّكَ وَانْحَرْ</div>
+                <div class="transliteration">Fasalli li-rabbika wan-har</div>
+                <div class="translation">"So pray to your Lord and sacrifice"</div>
+            </div>
+        </div>
+
+        <!-- Step 11: Ruku -->
+        <div class="prayer-step" id="step-11">
+            <div class="step-content">
+                <div class="step-title">7. Ruku (Bowing)</div>
+                <div class="step-description">Say "Allahu Akbar" and bow down. Place hands on knees and say:</div>
+                <div class="arabic">سُبْحَانَ رَبِّيَ الْعَظِيم</div>
+                <div class="transliteration">Subhana Rabbiyal Azeem</div>
+                <div class="translation">"Glory be to my Lord, the Most Great"</div>
+                <div class="step-description">Repeat 3 times minimum.</div>
+            </div>
+        </div>
+
+        <!-- Step 12: Standing after Ruku -->
+        <div class="prayer-step" id="step-12">
+            <div class="step-content">
+                <div class="step-title">8. Standing After Ruku</div>
+                <div class="step-description">Stand up straight and say:</div>
+                <div class="arabic">سَمِعَ اللَّهُ لِمَنْ حَمِدَه، رَبَّنَا لَكَ الْحَمْد</div>
+                <div class="transliteration">Sami'a Allahu liman hamidah, Rabbana lakal hamd</div>
+                <div class="translation">"Allah hears whoever praises Him. Our Lord, praise be to You"</div>
+            </div>
+        </div>
+
+        <!-- Step 13: First Sujud -->
+        <div class="prayer-step" id="step-13">
+            <div class="step-content">
+                <div class="step-title">9. First Sujud (Prostration)</div>
+                <div class="step-description">Say "Allahu Akbar" and prostrate. Place forehead, nose, palms, knees, and toes on the ground. Say:</div>
+                <div class="arabic">سُبْحَانَ رَبِّيَ الْأَعْلَى</div>
+                <div class="transliteration">Subhana Rabbiyal A'la</div>
+                <div class="translation">"Glory be to my Lord, the Most High"</div>
+                <div class="step-description">Repeat 3 times minimum.</div>
+            </div>
+        </div>
+
+        <!-- Step 14: Sitting between Sujud -->
+        <div class="prayer-step" id="step-14">
+            <div class="step-content">
+                <div class="step-title">10. Sitting Between Sujud</div>
+                <div class="step-description">Say "Allahu Akbar" and sit briefly between the two prostrations.</div>
+                <div class="step-description">You may say: "Rabbighfir li" (My Lord, forgive me)</div>
+                <div class="step-description">Then prepare for the second prostration.</div>
+            </div>
+        </div>
+
+        <!-- Step 15: Second Sujud -->
+        <div class="prayer-step" id="step-15">
+            <div class="step-content">
+                <div class="step-title">11. Second Sujud</div>
+                <div class="step-description">Say "Allahu Akbar" and prostrate again:</div>
+                <div class="arabic">سُبْحَانَ رَبِّيَ الْأَعْلَى</div>
+                <div class="transliteration">Subhana Rabbiyal A'la</div>
+                <div class="translation">"Glory be to my Lord, the Most High"</div>
+                <div class="step-description">This completes the first rak'ah. Now stand for the second rak'ah.</div>
+            </div>
+        </div>
+
+        <!-- Step 16: Second Rakah -->
+        <div class="prayer-step" id="step-16">
+            <div class="step-content">
+                <div class="step-title">12. Second Rak'ah</div>
+                <div class="step-description">Say "Allahu Akbar" and stand up for the second rak'ah.</div>
+                <div class="step-description">Repeat the same process:</div>
+                <div class="step-description">• Recite Al-Fatiha<br>• Recite additional surah<br>• Perform Ruku and Sujud</div>
+                <div class="step-description">After the second rak'ah, sit for Tashahhud.</div>
+            </div>
+        </div>
+
+        <!-- Step 17: Tashahhud -->
+        <div class="prayer-step" id="step-17">
+            <div class="step-content">
+                <div class="step-title">13. Tashahhud (Sitting)</div>
+                <div class="step-description">After the second rak'ah, sit and recite:</div>
+                <div class="arabic">التَّحِيَّاتُ لِلَّهِ وَالصَّلَوَاتُ وَالطَّيِّبَاتُ، السَّلَامُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُه</div>
+                <div class="transliteration">At-tahiyyatu lillahi wa-salawatu wa-tayyibatu. As-salamu alayka ayyuhan-nabiyyu wa rahmatu Allahi wa barakatuh</div>
+                <div class="translation">"All greetings, prayers and pure words are for Allah. Peace be upon you, O Prophet, and Allah's mercy and blessings"</div>
+            </div>
+        </div>
+
+        <!-- Step 18: Tashahhud continued -->
+        <div class="prayer-step" id="step-18">
+            <div class="step-content">
+                <div class="step-title">13. Tashahhud (continued)</div>
+                <div class="arabic">السَّلَامُ عَلَيْنَا وَعَلَى عِبَادِ اللَّهِ الصَّالِحِين، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّه، وَأَشْهَدُ أَنَّ مُحَمَّداً عَبْدُهُ وَرَسُولُه</div>
+                <div class="transliteration">As-salamu alayna wa ala ibadi Allahi-saliheen. Ashhadu an la ilaha illa Allah, wa ashhadu anna Muhammadan abduhu wa rasuluh</div>
+                <div class="translation">"Peace be upon us and upon the righteous servants of Allah. I bear witness that there is no god but Allah, and I bear witness that Muhammad is His servant and messenger"</div>
+            </div>
+        </div>
+
+        <!-- Step 19: Durood -->
+        <div class="prayer-step" id="step-19">
+            <div class="step-content">
+                <div class="step-title">14. Durood (Blessings)</div>
+                <div class="step-description">Send blessings upon Prophet Muhammad (PBUH):</div>
+                <div class="arabic">اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّد، كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيم، إِنَّكَ حَمِيدٌ مَجِيد</div>
+                <div class="transliteration">Allahumma salli ala Muhammad wa ala ali Muhammad, kama sallayta ala Ibrahim wa ala ali Ibrahim, innaka Hameedum Majeed</div>
+                <div class="translation">"O Allah, send prayers upon Muhammad and his family, as You sent prayers upon Ibrahim and his family. Indeed, You are Praiseworthy and Glorious"</div>
+            </div>
+        </div>
+
+        <!-- Step 20: Taslim -->
+        <div class="prayer-step" id="step-20">
+            <div class="step-content">
+                <div class="step-title">15. Taslim (Ending)</div>
+                <div class="step-description">Turn your head to the right and say:</div>
+                <div class="arabic">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّه</div>
+                <div class="transliteration">As-salamu alaykum wa rahmatu Allah</div>
+                <div class="translation">"Peace be upon you and Allah's mercy"</div>
+                <div class="step-description">Then turn to the left and repeat the same.</div>
+            </div>
+        </div>
+
+        <!-- Step 21: Completion -->
+        <div class="prayer-step" id="step-21">
+            <div class="step-content">
+                <div class="step-title">🎉 Prayer Completed!</div>
+                <div class="step-description">
+                    <p>Congratulations! You have completed the Fajr prayer.</p>
+                    <p>May Allah accept your prayer and grant you His blessings.</p>
+                    <p>You may now make personal du'a or perform dhikr (remembrance of Allah).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-button" id="prevBtn" onclick="changeStep(-1)" disabled>Previous</button>
+            <div class="step-counter">
+                <span id="currentStep">1</span> / <span id="totalSteps">21</span>
+            </div>
+            <button class="nav-button" id="nextBtn" onclick="changeStep(1)">Next</button>
+        </div>
+
+        <a href="../index.html" class="back-link">← Back to Prayer Times</a>
+    </div>
+
+    <script>
+        let currentStepNum = 1;
+        const totalSteps = 21;
+
+        function showStep(stepNum) {
+            // Hide all steps
+            document.querySelectorAll('.prayer-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            
+            // Show current step
+            document.getElementById(`step-${stepNum}`).classList.add('active');
+            
+            // Update counter
+            document.getElementById('currentStep').textContent = stepNum;
+            
+            // Update buttons
+            document.getElementById('prevBtn').disabled = stepNum === 1;
+            document.getElementById('nextBtn').disabled = stepNum === totalSteps;
+            
+            if (stepNum === totalSteps) {
+                document.getElementById('nextBtn').textContent = 'Restart';
+                document.getElementById('nextBtn').disabled = false;
+            } else {
+                document.getElementById('nextBtn').textContent = 'Next';
+            }
+        }
+
+        function changeStep(direction) {
+            if (currentStepNum === totalSteps && direction === 1) {
+                // Restart from beginning
+                currentStepNum = 1;
+            } else {
+                currentStepNum += direction;
+                if (currentStepNum < 1) currentStepNum = 1;
+                if (currentStepNum > totalSteps) currentStepNum = totalSteps;
+            }
+            
+            showStep(currentStepNum);
+        }
+
+        // Initialize
+        showStep(1);
+    </script>
+</body>
+</html>

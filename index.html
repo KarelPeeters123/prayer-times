@@ -27,6 +27,47 @@
     background-color: #fff3cd; /* light yellow */
   }
 
+  /* Prayer guide links styling */
+  .prayer-guides {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+  }
+
+  .prayer-guides h3 {
+    margin-top: 0;
+    color: #495057;
+  }
+
+  .guide-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 15px;
+  }
+
+  .guide-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #0066cc;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+
+  .guide-link:hover {
+    background-color: #0052a3;
+    text-decoration: none;
+  }
+
+  .prayer-name-link:hover {
+    text-decoration: underline !important;
+  }
+
   </style>
 </head>
 <body>
@@ -114,9 +155,17 @@
               className = "upcoming";
             }
 
+            // Create prayer name with link (if guide exists)
+            let prayerNameCell = item.prayerName;
+            const guidePrayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+            if (guidePrayers.includes(item.prayerName)) {
+              const guideFileName = item.prayerName.toLowerCase();
+              prayerNameCell = `<a href="prayer-guides/${guideFileName}.html" class="prayer-name-link" style="color: #0066cc; text-decoration: none;">${item.prayerName}</a>`;
+            }
+
             const row = `
               <tr class="${className}" data-prayer-time="${item.prayerTime.toISOString()}">
-                <td>${item.prayerName}</td>
+                <td>${prayerNameCell}</td>
                 <td>${item.timeStr}</td>
                 <td class="countdown"></td>
               </tr>
@@ -148,6 +197,18 @@
       });
   });
 </script>
-<a href="prayer-guide.html">Prayer Guide</a>
+
+<div class="prayer-guides">
+  <h3>📖 Prayer Guides</h3>
+  <p>Learn how to perform each prayer with step-by-step instructions, Arabic text, and translations:</p>
+  <div class="guide-links">
+    <a href="prayer-guides/fajr.html" class="guide-link">🌅 Fajr Guide</a>
+    <a href="prayer-guides/dhuhr.html" class="guide-link">☀️ Dhuhr Guide</a>
+    <a href="prayer-guides/asr.html" class="guide-link">🌇 Asr Guide</a>
+    <a href="prayer-guides/maghrib.html" class="guide-link">🌅 Maghrib Guide</a>
+    <a href="prayer-guides/isha.html" class="guide-link">🌙 Isha Guide</a>
+  </div>
+</div>
+
 </body>
 </html>
